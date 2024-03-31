@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+  url = "postgres://avnadmin:AVNS_utsLOc6ZGb07DB96Wjr@practice-service-practice1.a.aivencloud.com:10332/defaultdb?sslmode=require"
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  username  String  @unique
+  password  String
+  firstName String
+  lastName  String
+  role      Role
+
+}
+
+// model Leaves {
+//   id       Int   @id @default(autoincrement())
+//   casual   Int   @check(expression: "casual >= 0 AND casual <= 12")
+//   earned   Int   @check(expression: "earned >= 0 AND earned <= 15")
+//   medical  Int   @check(expression: "medical >= 0 AND medical <= 10")
+//   academic Int   @check(expression: "academic >= 0 AND academic <= 15")
+// }
+
+model Record {
+  id Int @id @default(autoincrement())
+  username String 
+  stage stage
+  type leaveType
+  from DateTime
+  to DateTime
+  status status
+  reqMessage String
+  rejMessage String
+}
+
+enum stage {
+  FACULTY
+  HOD
+}
+enum leaveType {
+  causual
+  earned
+  medical
+  academic
+}
+
+enum status {
+  accepted
+  rejected
+}
+
+enum Role {
+ FACULTY
+ HOD
+ DIRECTOR
+}
