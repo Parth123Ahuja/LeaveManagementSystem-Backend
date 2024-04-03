@@ -7,11 +7,11 @@ const prisma = new PrismaClient();
 
 adminRouter.post("/addUser", async (req, res) => {
   try {
-    const { username, password, firstName, lastName, role } = req.body;
+    let { username, password, firstName, lastName, role } = req.body;
     if (!username || !password || !firstName || !lastName || !role) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    const newUser = await createUser({
+    let newUser = await createUser({
       username,
       password,
       firstName,
@@ -30,7 +30,7 @@ adminRouter.delete("/deleteUser", async (req, res) => {
   if (req.body.username === undefined || req.body.username === null)
     res.status(500).send("Username is missing");
   try {
-    const deletedUser = await prisma.user.delete({
+    let deletedUser = await prisma.user.delete({
       where: {
         username: req.body.username,
       },
@@ -50,7 +50,7 @@ adminRouter.delete("/deleteUser", async (req, res) => {
 
 adminRouter.get("/userData", async (req, res) => {
   try {
-    const userData = await prisma.user.findMany();
+    let userData = await prisma.user.findMany();
     res.status(200).json(userData);
   } catch (error) {
     res.send(error);

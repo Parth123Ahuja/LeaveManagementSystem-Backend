@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function findUser({ username, password }) {
-  const user = await prisma.user.findFirst({
+  let user = await prisma.user.findFirst({
     where: {
       username: username,
       password: password,
@@ -13,7 +13,7 @@ async function findUser({ username, password }) {
 }
 
 async function createUser({ username, password, firstName, lastName, role }) {
-  const newUser = await prisma.user.create({
+  let newUser = await prisma.user.create({
     data: {
       username,
       password,
@@ -26,17 +26,9 @@ async function createUser({ username, password, firstName, lastName, role }) {
   return newUser;
 }
 
-async function createRecord({
-  username,
-  stage,
-  type,
-  from,
-  to,
-  status,
-  reqMessage,
-  rejMessage,
-}) {
-  const record = await prisma.record.create({
+async function createRecord(data) {
+  let { username, stage, type, from, to, status, reqMessage } = data;
+  let record = await prisma.record.create({
     data: {
       username,
       stage,
@@ -45,7 +37,6 @@ async function createRecord({
       to,
       status,
       reqMessage,
-      rejMessage,
     },
   });
 
@@ -53,12 +44,11 @@ async function createRecord({
 }
 
 async function userLeaves(username) {
-  const leaves = prisma.record.findMany({
+  let leaves = await prisma.record.findMany({
     where: {
       username: username,
     },
   });
-
   return leaves;
 }
 

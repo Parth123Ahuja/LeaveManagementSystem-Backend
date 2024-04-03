@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 async function authenticate(req, res, next) {
-  const token = req.headers.token;
+  let token = req.headers.token;
   try {
-    const decoded = jwt.verify(token, "thisIsKey");
+    let decoded = jwt.verify(token, "thisIsKey");
     req.decoded = decoded;
     next();
   } catch (error) {

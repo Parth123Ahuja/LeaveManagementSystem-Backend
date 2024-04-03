@@ -1,11 +1,13 @@
+
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url = "postgres://avnadmin:AVNS_utsLOc6ZGb07DB96Wjr@practice-service-practice1.a.aivencloud.com:10332/defaultdb?sslmode=require"
+  url      = env("DATABASE_URL")
+  // url = "postgres://avnadmin:AVNS_utsLOc6ZGb07DB96Wjr@practice-service-practice1.a.aivencloud.com:10332/defaultdb?sslmode=require"
 }
 
 model User {
@@ -15,16 +17,12 @@ model User {
   firstName String
   lastName  String
   role      Role
-
+  casualLeave  Int  @default(12)
+  earnedLeave Int   @default(15)
+  medicalLeave Int  @default(10)
+  academicLeave Int  @default(15)
 }
 
-// model Leaves {
-//   id       Int   @id @default(autoincrement())
-//   casual   Int   @check(expression: "casual >= 0 AND casual <= 12")
-//   earned   Int   @check(expression: "earned >= 0 AND earned <= 15")
-//   medical  Int   @check(expression: "medical >= 0 AND medical <= 10")
-//   academic Int   @check(expression: "academic >= 0 AND academic <= 15")
-// }
 
 model Record {
   id Int @id @default(autoincrement())
@@ -33,14 +31,20 @@ model Record {
   type leaveType
   from DateTime
   to DateTime
-  status status
-  reqMessage String
-  rejMessage String
+  status status 
+  reqMessage String @default("applied for leave")
+  rejMessage String @default("awaiting confimation")
+}
+enum status {
+  awaiting
+  accepted
+  rejected
 }
 
 enum stage {
-  FACULTY
-  HOD
+ FACULTY
+ HOD
+ DIRECTOR
 }
 enum leaveType {
   causual
@@ -49,10 +53,7 @@ enum leaveType {
   academic
 }
 
-enum status {
-  accepted
-  rejected
-}
+
 
 enum Role {
  FACULTY

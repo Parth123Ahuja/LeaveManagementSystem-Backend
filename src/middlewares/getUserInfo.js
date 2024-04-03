@@ -2,9 +2,9 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function getUserInfo(req, res, next) {
-  const { username } = req.decoded;
+  let { username } = req.decoded;
   try {
-    const userInfo = await prisma.user.findFirst({
+    let userInfo = await prisma.user.findFirst({
       where: {
         username: username,
       },
@@ -12,7 +12,7 @@ async function getUserInfo(req, res, next) {
     req.userInfo = userInfo;
     next();
   } catch (error) {
-    res.status(500).send("Internal server Error @ getUserInfo", error);
+    res.status(500).send(`Internal server Error @ getUserInfo${error}`);
   }
 }
 

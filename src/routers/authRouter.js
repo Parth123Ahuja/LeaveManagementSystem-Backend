@@ -4,7 +4,7 @@ const { findUser } = require("../functions/prismaFunction");
 const authRouter = express.Router();
 const secretKey = "thisIsKey";
 
-authRouter.get("/logIn", async (req, res) => {
+authRouter.post("/logIn", async (req, res) => {
   let { username, password } = req.body;
   let response = await findUser({ username, password });
   if (response) {
