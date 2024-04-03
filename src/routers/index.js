@@ -7,7 +7,7 @@ const leaveRouter = require("./leaveRouter");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.status(200).send("Welcome");
+  res.status(200).send("Health Check");
 });
 router.use("/auth", authRouter);
 router.use("/admin", adminRouter);
