@@ -1,13 +1,11 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // url = "postgres://avnadmin:AVNS_utsLOc6ZGb07DB96Wjr@practice-service-practice1.a.aivencloud.com:10332/defaultdb?sslmode=require"
+  // url      = env("DATABASE_URL")
+  url = "postgres://avnadmin:AVNS_pdimSNnwtFMdmd6G6Oc@leave-management-service-db-leave-management-system.a.aivencloud.com:10332/defaultdb?sslmode=require"
 }
 
 model User {
@@ -27,6 +25,7 @@ model User {
 model Record {
   id Int @id @default(autoincrement())
   username String 
+  name String @unique
   stage stage
   type leaveType
   from DateTime

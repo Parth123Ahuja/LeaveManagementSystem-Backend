@@ -12,6 +12,7 @@ router.get("/", (req, res) => {
 router.use("/auth", authRouter);
 router.use("/admin", adminRouter);
 router.use("/user", userRouter);
+
 router.use("/leave", leaveRouter);
 
 module.exports = router;

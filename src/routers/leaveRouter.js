@@ -11,17 +11,20 @@ leaveRouter.post("/apply", authenticate, getUserInfo, async (req, res) => {
   let username = req.userInfo.username;
   let stage = req.userInfo.role;
   let status = "accepted";
-  let rejMessafe = "awaiting confimation";
-  let { type, from, to, reqMessage } = req.body;
+  let rejMessage = "awaiting confimation";
+  let { type, name, from, to, reqMessage } = req.body;
+  console.log(name);
   try {
     let record = await createRecord({
       username,
+      name,
       stage,
       type,
       from,
       to,
       status,
       reqMessage,
+      rejMessage,
     });
     res.status(201).json({
       success: true,

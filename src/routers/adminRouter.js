@@ -18,7 +18,10 @@ adminRouter.post("/addUser", async (req, res) => {
       lastName,
       role,
     });
-    res.status(201).json(newUser);
+    res.status(201).json({
+      success: true,
+      body: newUser,
+    });
   } catch (error) {
     res.status(500).json({
       error: `failed to addUser :- ${error}`,

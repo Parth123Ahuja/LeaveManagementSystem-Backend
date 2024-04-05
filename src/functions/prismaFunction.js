@@ -27,13 +27,14 @@ async function createUser({ username, password, firstName, lastName, role }) {
 }
 
 async function createRecord(data) {
-  let { username, stage, type, from, to, status, reqMessage } = data;
+  let { username, stage, type, from, to, name, status, reqMessage } = data;
   let record = await prisma.record.create({
     data: {
       username,
       stage,
       type,
       from,
+      name,
       to,
       status,
       reqMessage,
