@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url = "postgres://avnadmin:AVNS_pdimSNnwtFMdmd6G6Oc@leave-management-service-db-leave-management-system.a.aivencloud.com:10332/defaultdb?sslmode=require"
+  url      = env("DATABASE_URL")
+
 }
 
 model User {
