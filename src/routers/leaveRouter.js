@@ -10,8 +10,8 @@ const { createRecord, userLeaves } = require("../functions/prismaFunction");
 leaveRouter.post("/apply", authenticate, getUserInfo, async (req, res) => {
   let username = req.userInfo.username;
   let stage = req.userInfo.role;
-  let status = "accepted";
-  let rejMessage = "awaiting confimation";
+  let status = undefined;
+  let rejMessage = undefined;
   let { type, name, from, to, reqMessage } = req.body;
   try {
     let record = await createRecord({

@@ -27,7 +27,17 @@ async function createUser({ username, password, firstName, lastName, role }) {
 }
 
 async function createRecord(data) {
-  let { username, stage, type, from, to, name, status, reqMessage } = data;
+  let {
+    username,
+    stage,
+    type,
+    from,
+    to,
+    name,
+    status,
+    reqMessage,
+    rejMessage,
+  } = data;
   let record = await prisma.record.create({
     data: {
       username,
@@ -38,6 +48,7 @@ async function createRecord(data) {
       to,
       status,
       reqMessage,
+      rejMessage,
     },
   });
 
@@ -45,12 +56,16 @@ async function createRecord(data) {
 }
 
 async function userLeaves(username) {
-  let leaves = await prisma.record.findMany({
-    where: {
-      username: username,
-    },
-  });
-  return leaves;
+  try {
+    let leaves = await prisma.record.findMany({
+      where: {
+        username: username,
+      },
+    });
+    return leaves;
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 module.exports = { findUser, createUser, createRecord, userLeaves };

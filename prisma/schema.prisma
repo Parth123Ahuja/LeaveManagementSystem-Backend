@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-
+  // url      = env("DATABASE_URL")
+  url = "postgres://avnadmin:AVNS_pdimSNnwtFMdmd6G6Oc@leave-management-service-db-leave-management-system.a.aivencloud.com:10332/defaultdb?sslmode=require"
 }
 
 model User {
@@ -30,9 +30,9 @@ model Record {
   type leaveType
   from DateTime
   to DateTime
-  status status 
-  reqMessage String @default("applied for leave")
-  rejMessage String @default("awaiting confimation")
+  status status @default(awaiting)
+  reqMessage String @default("")
+  rejMessage String @default("")
 }
 enum status {
   awaiting
@@ -46,7 +46,7 @@ enum stage {
  DIRECTOR
 }
 enum leaveType {
-  causual
+  casual
   earned
   medical
   academic
