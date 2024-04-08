@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { func } = require("joi");
 const prisma = new PrismaClient();
 
 async function findUser({ username, password }) {
@@ -68,4 +69,23 @@ async function userLeaves(username) {
   }
 }
 
-module.exports = { findUser, createUser, createRecord, userLeaves };
+async function getApplications(data) {
+  try {
+    let applications = await prisma.record.findMany({
+      where: {
+        stage: data,
+      },
+    });
+    return applications;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+module.exports = {
+  findUser,
+  createUser,
+  createRecord,
+  userLeaves,
+  getApplications,
+};

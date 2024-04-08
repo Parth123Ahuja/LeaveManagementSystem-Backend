@@ -2,7 +2,11 @@ const express = require("express");
 const leaveRouter = express.Router();
 const authenticate = require("../middlewares/authentication");
 const getUserInfo = require("../middlewares/getUserInfo");
-const { createRecord, userLeaves } = require("../functions/prismaFunction");
+const {
+  createRecord,
+  userLeaves,
+  getApplications,
+} = require("../functions/prismaFunction");
 
 // prefix string
 // /leave/
@@ -45,11 +49,46 @@ leaveRouter.get("/getLeaves", authenticate, getUserInfo, async (req, res) => {
       body: leaves,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       msg: "Internal server Error",
       error: error,
     });
   }
 });
+
+leaveRouter.get(
+  "/getApplications",
+  authenticate,
+  getUserInfo,
+  async (req, res) => {
+    let applications = undefined;
+    try {
+      let role = req.userInfo.role;
+      if (role === "FACULTY") {
+        res.status(400).json({
+          success: false,
+          msg: "Not authorized for this operation",
+        });
+      }
+      if (role === "HOD") {
+        applications = await getApplications("FACULTY");
+      }
+      if (role === "DIRECTOR") {
+        applications = await getApplications("HOD");
+      }
+
+      res.status(200).json({
+        success: true,
+        body: applications,
+      });
+    } catch (error) {
+      res.status(502).json({
+        success: false,
+        body: error,
+      });
+    }
+  }
+);
 
 module.exports = leaveRouter;
