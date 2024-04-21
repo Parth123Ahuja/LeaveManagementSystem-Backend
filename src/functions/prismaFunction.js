@@ -82,10 +82,89 @@ async function getApplications(data) {
   }
 }
 
+async function updateStatus(data) {
+  try {
+    let updatedRecord = await prisma.record.update({
+      where: {
+        name: data.name,
+      },
+      data: {
+        stage: data.stage,
+      },
+    });
+    console.log(updatedRecord);
+    return updatedRecord;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async function updateleaves(userInfo, days, type) {
+  try {
+    let updateleave;
+    let updatedDays;
+    switch (type) {
+      case "casual":
+        updatedDays = userInfo.casualLeave - days;
+        updateleave = await prisma.user.update({
+          where: {
+            username: userInfo.username,
+          },
+          data: {
+            casualLeave: updatedDays,
+          },
+        });
+        return updateleave;
+        break;
+      case "medical":
+        updatedDays = userInfo.medicalLeave - days;
+        updateleave = await prisma.user.update({
+          where: {
+            username: userInfo.username,
+          },
+          data: {
+            medicalLeave: updatedDays,
+          },
+        });
+        return updateleave;
+        break;
+      case "earned":
+        updatedDays = userInfo.earnedLeave - days;
+        updateleave = await prisma.user.update({
+          where: {
+            username: userInfo.username,
+          },
+          data: {
+            earnedLeave: updatedDays,
+          },
+        });
+        return updateleave;
+        break;
+
+      case "academic":
+        updatedDays = userInfo.academicLeave - days;
+        updateleave = await prisma.user.update({
+          where: {
+            username: userInfo.username,
+          },
+          data: {
+            academicLeave: updatedDays,
+          },
+        });
+        return updateleave;
+        break;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   findUser,
   createUser,
   createRecord,
   userLeaves,
   getApplications,
+  updateStatus,
+  updateleaves,
 };

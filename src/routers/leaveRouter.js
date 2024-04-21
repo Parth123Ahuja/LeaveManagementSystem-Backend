@@ -6,6 +6,8 @@ const {
   createRecord,
   userLeaves,
   getApplications,
+  updateStatus,
+  updateleaves,
 } = require("../functions/prismaFunction");
 
 // prefix string
@@ -16,7 +18,49 @@ leaveRouter.post("/apply", authenticate, getUserInfo, async (req, res) => {
   let stage = req.userInfo.role;
   let status = undefined;
   let rejMessage = undefined;
-  let { type, name, from, to, reqMessage } = req.body;
+  let { type, name, from, to, reqMessage, days } = req.body;
+
+  switch (type) {
+    case "casual":
+      if (req.userInfo.casualLeave < days) {
+        return res.status(400).json({
+          error: {
+            msg: "Not sufficient leaves",
+          },
+        });
+      }
+      break;
+    case "medical":
+      if (req.userInfo.medicalLeave < days) {
+        return res.status(400).json({
+          error: {
+            msg: "Not sufficient leaves",
+          },
+        });
+      }
+      break;
+    case "earned":
+      if (req.userInfo.earnedLeave < days) {
+        return res.status(400).json({
+          error: {
+            msg: "Not sufficient leaves",
+          },
+        });
+      }
+      break;
+    case "academic":
+      if (req.userInfo.academicLeave < days) {
+        return res.status(400).json({
+          error: {
+            msg: "Not sufficient leaves",
+          },
+        });
+      }
+      break;
+    default:
+      break;
+  }
+
   try {
     let record = await createRecord({
       username,
@@ -29,13 +73,14 @@ leaveRouter.post("/apply", authenticate, getUserInfo, async (req, res) => {
       reqMessage,
       rejMessage,
     });
+    await updateleaves(req.userInfo, days, type);
     res.status(201).json({
       success: true,
       msg: "leave applied success",
       body: record,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       error: `failed to post leave :- ${error}`,
     });
   }
@@ -87,6 +132,44 @@ leaveRouter.get(
         success: false,
         body: error,
       });
+    }
+  }
+);
+
+leaveRouter.get(
+  "/updateStatus",
+  authenticate,
+  getUserInfo,
+  async (req, res) => {
+    try {
+      const queryParam = req.query;
+
+      if (!(queryParam.status === "accept" || queryParam.status === "reject")) {
+        res
+          .send(400)
+          .json({ error: "Wrong status given either give accept or reject" });
+      }
+      if (!queryParam.name) {
+        res.send(400).json({ error: "Id is not provided" });
+      }
+      if (req.userInfo.role === "FACULTY") {
+        res.status(400).json({
+          msg: "Not authorized for this req",
+        });
+      }
+      if (req.userInfo.role === "HOD") {
+        let updatedRecord = await updateStatus({
+          name: queryParam.name,
+          stage: "HOD",
+        });
+        res.status(200).send(updatedRecord);
+      }
+      res.status("200").send("control gone");
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .send("Internal server error while performing updateStatus");
     }
   }
 );

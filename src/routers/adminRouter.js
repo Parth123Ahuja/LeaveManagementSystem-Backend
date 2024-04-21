@@ -39,6 +39,12 @@ adminRouter.delete("/deleteUser", async (req, res) => {
       },
     });
 
+    await prisma.record.deleteMany({
+      where: {
+        username: req.body.username,
+      },
+    });
+
     res.status(200).json({
       success: true,
       msg: "Following user has been deleted",
