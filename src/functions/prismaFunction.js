@@ -84,18 +84,40 @@ async function getApplications(data) {
 
 async function updateStatus(data) {
   try {
-    let updatedRecord = await prisma.record.update({
-      where: {
-        name: data.name,
-      },
-      data: {
-        stage: data.stage,
-      },
-    });
-    console.log(updatedRecord);
-    return updatedRecord;
+    if (data.stage === "DIRECTOR") {
+      let updatedRecord = await prisma.record.update({
+        where: {
+          name: data.name,
+        },
+        data: {
+          stage: data.stage,
+          status: data.status,
+        },
+      });
+      return updatedRecord;
+    } else {
+      let dataObject = null;
+      if (data.status === "rejected") {
+        dataObject = {
+          stage: data.stage,
+          status: "rejected",
+        };
+      }
+      if (data.status === "accepted") {
+        dataObject = {
+          stage: data.stage,
+        };
+      }
+      let updatedRecord = await prisma.record.update({
+        where: {
+          name: data.name,
+        },
+        data: dataObject,
+      });
+      return updatedRecord;
+    }
   } catch (error) {
-    throw new Error(error);
+    return new Error(error);
   }
 }
 

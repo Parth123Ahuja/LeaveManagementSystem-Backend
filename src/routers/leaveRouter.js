@@ -144,7 +144,9 @@ leaveRouter.get(
     try {
       const queryParam = req.query;
 
-      if (!(queryParam.status === "accept" || queryParam.status === "reject")) {
+      if (
+        !(queryParam.status === "accepted" || queryParam.status === "rejected")
+      ) {
         res
           .send(400)
           .json({ error: "Wrong status given either give accept or reject" });
@@ -161,10 +163,19 @@ leaveRouter.get(
         let updatedRecord = await updateStatus({
           name: queryParam.name,
           stage: "HOD",
+          status: queryParam.status,
         });
         res.status(200).send(updatedRecord);
       }
-      res.status("200").send("control gone");
+
+      if (req.userInfo.role === "DIRECTOR") {
+        let updatedRecord = await updateStatus({
+          name: queryParam.name,
+          stage: "DIRECTOR",
+          status: queryParam.status,
+        });
+        res.status(200).send(updatedRecord);
+      }
     } catch (error) {
       console.log(error);
       res

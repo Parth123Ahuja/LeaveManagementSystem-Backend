@@ -17,6 +17,12 @@ app.options("*", cors());
 
 app.use("/", router);
 
+// Error handler middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke in the server");
+});
+
 app.listen(port, () => {
   console.log("server is running on port", port);
 });
