@@ -9,8 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin:
-      "https://662531c5710073bb6f91490b--magnificent-madeleine-db8c43.netlify.app/",
+    origin: "http://localhost:3001",
   })
 );
 app.options("*", cors());
